@@ -1,0 +1,18 @@
+CREATE TABLE "obligations_by_year" (
+  "toptier_code" text,
+  "fiscal_year" bigint,
+  "agency_budgetary_resources" double precision,
+  "agency_total_obligated" double precision,
+  "total_budgetary_resources" double precision
+);
+
+INSERT INTO "obligations_by_year" ("toptier_code","fiscal_year","agency_budgetary_resources","agency_total_obligated","total_budgetary_resources")
+VALUES
+('097',2024,2128062853565.38,894845336934.44,14467363397078.02),
+('097',2023,1523433316840.06,1330544104855.49,11889863708699.81),
+('097',2022,1635073184398.36,1189944864054.66,11409814941613.59),
+('097',2021,1514296053257.55,1146962263260.7,12219096866505.09),
+('097',2020,1278882283176.59,1130135336028.02,11461079028211.95),
+('097',2019,1252639175378.39,1154860031199.99,7985842464180.6),
+('097',2018,1261940994955.88,1092438524753.46,7593875408547.67),
+('097',2017,1163404425401.68,1014206206108,7158037155046.72);
