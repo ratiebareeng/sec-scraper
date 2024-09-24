@@ -22,19 +22,19 @@ if response.status_code == 200:
     data = json.loads(response.text)
 
     # Connect to PostgreSQL
-    conn = psycopg2.connect(
+    db_connection = psycopg2.connect(
         host="localhost",
         database="midnight-demo",
         user="ratiebareeng",
         password="13-Aug-24"
     )
-    cur = conn.cursor()
+    cursor = db_connection.cursor()
 
     # Drop the table if it exists
-    cur.execute("DROP TABLE IF EXISTS sec_ticker_lookup")
+    cursor.execute("DROP TABLE IF EXISTS sec_ticker_lookup")
 
     # Create the table
-    cur.execute("""
+    cursor.execute("""
         CREATE TABLE sec_ticker_lookup (
             cik_number INT,
             ticker TEXT,
@@ -47,15 +47,15 @@ if response.status_code == 200:
         cik_number = cik_info["cik_str"]
         ticker = cik_info["ticker"]
         title = cik_info["title"]
-        cur.execute(
+        cursor.execute(
             sql.SQL("INSERT INTO sec_ticker_lookup (cik_number, ticker, title) VALUES (%s, %s, %s)"),
             [cik_number, ticker, title]
         )
 
     # Resource cleanup
-    conn.commit()
-    cur.close()
-    conn.close()
+    db_connection.commit()
+    cursor.close()
+    db_connection.close()
     print("Data imported successfully!")
 else:
     print(f"Failed to retrieve data: {response.status_code}")
