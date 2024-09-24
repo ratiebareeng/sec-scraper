@@ -6,7 +6,7 @@ import json
 # Download url
 url = "https://www.sec.gov/files/company_tickers.json"
 
-# Authentication headers: Provide your name and a contact email
+# Authentication headers: Provide a name and a contact email
 headers = {
     "User-Agent": "Oratile Bareeng bareengbiz@gmail.com",
     "Accept-Encoding": "gzip, deflate",
@@ -14,8 +14,10 @@ headers = {
     "Connection": "keep-alive"
 }
 
+# Send request for url
 response = requests.get(url, headers=headers)
 
+# Process response
 if response.status_code == 200:
     data = json.loads(response.text)
 
@@ -50,6 +52,7 @@ if response.status_code == 200:
             [cik_number, ticker, title]
         )
 
+    # Resource cleanup
     conn.commit()
     cur.close()
     conn.close()
