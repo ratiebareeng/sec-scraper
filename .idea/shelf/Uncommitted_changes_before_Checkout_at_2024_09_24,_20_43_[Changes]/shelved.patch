@@ -1,0 +1,46 @@
+Index: sec-data-to-postgres.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import requests\nimport psycopg2\nfrom psycopg2 import sql\nimport json\n\n# Download the file\nurl = \"https://www.sec.gov/files/company_tickers.json\"\n\nheaders = {\n    \"User-Agent\": \"Oratile Bareeng oratile.bareeng@toppangravity.com\",  # Provide your name and a contact email\n    \"Accept-Encoding\": \"gzip, deflate\",\n    \"Host\": \"www.sec.gov\",\n    \"Connection\": \"keep-alive\"\n}\n\nresponse = requests.get(url, headers=headers)\n\nif response.status_code == 200:\n    data = json.loads(response.text)\n\n    # Connect to PostgreSQL\n    conn = psycopg2.connect(\n        host=\"localhost\",\n        database=\"midnight-demo\",\n        user=\"ratiebareeng\",\n        password=\"13-Aug-24\"\n    )\n    cur = conn.cursor()\n\n    # Drop the table if it exists\n    cur.execute(\"DROP TABLE IF EXISTS sec_cik_lookup\")\n\n    # Create the table\n    cur.execute(\"\"\"\n        CREATE TABLE sec_cik_lookup (\n            cik_number INT,\n            ticker TEXT,\n            title TEXT\n        )\n    \"\"\")\n\n    # Insert the data\n    for _, cik_info in data.items():\n        cik_number = cik_info[\"cik_str\"]\n        ticker = cik_info[\"ticker\"]\n        title = cik_info[\"title\"]\n        cur.execute(\n            sql.SQL(\"INSERT INTO sec_cik_lookup (cik_number, ticker, title) VALUES (%s, %s, %s)\"),\n            [cik_number, ticker, title]\n        )\n\n    conn.commit()\n    cur.close()\n    conn.close()\n    print(\"Data imported successfully!\")\nelse:\n    print(f\"Failed to retrieve data: {response.status_code}\")\n
+===================================================================
+diff --git a/sec-data-to-postgres.py b/sec-data-to-postgres.py
+--- a/sec-data-to-postgres.py	(revision 71eb8b0a67f3fd493a8520884210f31c03cc75f3)
++++ b/sec-data-to-postgres.py	(date 1727203177982)
+@@ -3,11 +3,12 @@
+ from psycopg2 import sql
+ import json
+ 
+-# Download the file
++# Download url
+ url = "https://www.sec.gov/files/company_tickers.json"
+ 
++# Authentication headers: Provide your name and a contact email
+ headers = {
+-    "User-Agent": "Oratile Bareeng oratile.bareeng@toppangravity.com",  # Provide your name and a contact email
++    "User-Agent": "Oratile Bareeng bareengbiz@gmail.com",
+     "Accept-Encoding": "gzip, deflate",
+     "Host": "www.sec.gov",
+     "Connection": "keep-alive"
+@@ -28,11 +29,11 @@
+     cur = conn.cursor()
+ 
+     # Drop the table if it exists
+-    cur.execute("DROP TABLE IF EXISTS sec_cik_lookup")
++    cur.execute("DROP TABLE IF EXISTS sec_ticker_lookup")
+ 
+     # Create the table
+     cur.execute("""
+-        CREATE TABLE sec_cik_lookup (
++        CREATE TABLE sec_ticker_lookup (
+             cik_number INT,
+             ticker TEXT,
+             title TEXT
+@@ -45,7 +46,7 @@
+         ticker = cik_info["ticker"]
+         title = cik_info["title"]
+         cur.execute(
+-            sql.SQL("INSERT INTO sec_cik_lookup (cik_number, ticker, title) VALUES (%s, %s, %s)"),
++            sql.SQL("INSERT INTO sec_ticker_lookup (cik_number, ticker, title) VALUES (%s, %s, %s)"),
+             [cik_number, ticker, title]
+         )
+ 
