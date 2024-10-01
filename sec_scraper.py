@@ -9,7 +9,7 @@ cik_lookup_url = "https://www.sec.gov/Archives/edgar/cik-lookup-data.txt"
 
 # Authentication headers: Provide a name and a contact email
 headers = {
-    "User-Agent": "Oratile Bareeng bareengbiz@gmail.com",
+    "User-Agent": "NAME EMAIL",
     "Accept-Encoding": "gzip, deflate",
     "Host": "www.sec.gov",
     "Connection": "keep-alive"
@@ -18,9 +18,9 @@ headers = {
 # Configure PostgreSQL connection
 db_connection = psycopg2.connect(
     host="localhost",
-    database="midnight-demo",
-    user="ratiebareeng",
-    password="13-Aug-24"
+    database="DB-NAME",
+    user="SERVER-USERNAME",
+    password="SERVER-PASSWORD"
 )
 
 # Scrape CIK numbers from cik_lookup_url
